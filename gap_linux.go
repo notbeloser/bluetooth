@@ -3,6 +3,7 @@
 package bluetooth
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/godbus/dbus/v5"
@@ -122,6 +123,7 @@ func (a *Adapter) Scan(callback func(*Adapter, ScanResult)) error {
 	}
 	devices := make(map[dbus.ObjectPath]*device.Device1Properties)
 	for _, dev := range deviceList {
+		fmt.Printf("[scan] dev : %v\r\n", dev)
 		if dev.Properties.Connected {
 			callback(a, makeScanResult(dev.Properties))
 			select {
@@ -193,15 +195,16 @@ func (a *Adapter) Scan(callback func(*Adapter, ScanResult)) error {
 
 	// unreachable
 }
-func (a *Adapter) Connected() {
-	deviceList, err := a.adapter.GetDevices()
-	if err != nil {
-		return err
-	}
-	for _, dev := range deviceList {
-		fmt.Printf("[Connected] %v\r\n", dev)
-	}
-}
+
+// func (a *Adapter) Connected() {
+// 	deviceList, err := a.adapter.GetDevices()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	for _, dev := range deviceList {
+// 		fmt.Printf("[Connected] %v\r\n", dev)
+// 	}
+// }
 
 // StopScan stops any in-progress scan. It can be called from within a Scan
 // callback to stop the current scan. If no scan is in progress, an error will
